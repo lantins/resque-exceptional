@@ -64,6 +64,18 @@ Configuration Options
   * `http_open_timeout` - timeout in seconds to establish the connection. (default: `2`)
   * `http_read_timeout` - timeout in seconds to wait for a reply. (default: `5`)
 
+Screenshots
+-----------
+
+Below are some screenshots of getexceptional.com's web interface showing
+Resque exceptions.
+
+**App Overview**
+![Get Exceptional - Overview](http://img.skitch.com/20101013-k7hgurmaqew6sn8cik5gywbt2.png)
+
+**Detailed Information**
+![Get Exceptional - Details](http://img.skitch.com/20101013-ftjrjhh3fegcqr9mig9kttmwi4.png)
+
 Note on Patches/Pull Requests
 -----------------------------
 
