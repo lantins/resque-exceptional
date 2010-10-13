@@ -1,13 +1,13 @@
 resque-exceptional
 ==================
 
-resque-exceptional provides a Resque failure backend that sends exceptions
-raised by jobs to http://getexceptional.com
+resque-exceptional provides a [Resque][re] failure backend that sends exceptions
+raised by jobs to [http://getexceptional.com][ge]
 
 Install & Quick Start
 ---------------------
 
-Before you jump into code, you'll need a http://getexceptional.com account.
+Before you jump into code, you'll need a [http://getexceptional.com][ge] account.
 
 To install:
 
@@ -67,8 +67,8 @@ Configuration Options
 Screenshots
 -----------
 
-Below are some screenshots of getexceptional.com's web interface showing
-Resque exceptions.
+Below are some screenshots of the getexceptional.com web interface, showing
+[Resque][re] exceptions.
 
 **App Overview**
 ![Get Exceptional - Overview](http://img.skitch.com/20101013-k7hgurmaqew6sn8cik5gywbt2.png)
@@ -91,4 +91,8 @@ Note on Patches/Pull Requests
 Author
 ------
 
-Luke Antins :: http://lividpenguin.com :: @lantins
+Luke Antins :: [http://lividpenguin.com][lp] :: @lantins
+
+[re]: http://github.com/defunkt/resque
+[lp]: http://lividpenguin.com
+[ge]: http://getexceptional.com
