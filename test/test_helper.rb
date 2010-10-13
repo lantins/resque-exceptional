@@ -5,38 +5,56 @@ $TESTING = true
 require 'test/unit'
 require 'rubygems'
 require 'simplecov'
+require 'rr'
 
 SimpleCov.start do
   add_filter "/test/"
 end
 
+class Test::Unit::TestCase
+  include RR::Adapters::TestUnit
+end
+
+# require our failure backend to test.
 require 'resque-exceptional'
 
-# make sure we can run redis
-if !system("which redis-server")
-  puts '', "** can't find `redis-server` in your path"
-  puts "** try running `sudo rake install`"
-  abort ''
-end
+# fake worker.
+class FakeWorker
+  attr_reader :log_history
 
-# start our own redis when the tests start,
-# kill it when they end
-at_exit do
-  next if $!
-
-  if defined?(MiniTest)
-    exit_code = MiniTest::Unit.new.run(ARGV)
-  else
-    exit_code = Test::Unit::AutoRunner.run
+  def initialize
+    @log_history = []
   end
 
-  pid = `ps -e -o pid,command | grep [r]edis-test`.split(" ")[0]
-  puts "Killing test redis server..."
-  `rm -f #{dir}/dump.rdb`
-  Process.kill("KILL", pid.to_i)
-  exit exit_code
+  def log(msg)
+    @log_history << msg
+    p msg
+  end
+
+  def to_s
+    'mr. fake resque worker.'
+  end
 end
 
-puts "Starting redis for testing at localhost:9736..."
-`redis-server #{dir}/redis.conf`
-Resque.redis = '127.0.0.1:9736'
+# test exceptions.
+module TestApp
+  class Error < StandardError
+  end
+
+  def self.method_bar
+    raise Error, 'example exception message. bar.'
+  end
+
+  def self.method_foo
+    method_bar
+  end
+
+  def self.grab_exception
+    begin
+      method_foo
+    rescue => e
+      return e
+    end
+  end
+
+end

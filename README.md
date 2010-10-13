@@ -21,8 +21,8 @@ Using only the exceptional failure backend:
     require 'resque-exceptional'
 
     Resque::Failure::Exceptional.configure do |config|
-      config.api_key = 'fc49503482dec7bf13eda286c99ab2bf'
-      config.ssl = false
+      config.api_key = '505f2518c41866bb0be7ba434bb2b079'
+      config.use_ssl = false
     end
 
     Resque::Failure.backend = Resque::Failure::Exceptional
@@ -38,7 +38,7 @@ Using both the redis and exceptional failure backends:
     require 'resque/failure/redis'
 
     Resque::Failure::Exceptional.configure do |config|
-      config.api_key = 'fc49503482dec7bf13eda286c99ab2bf'
+      config.api_key = '505f2518c41866bb0be7ba434bb2b079'
     end
 
     Resque::Failure::Multiple.classes = [Resque::Failure::Redis, Resque::Failure::Exceptional]
@@ -47,8 +47,22 @@ Using both the redis and exceptional failure backends:
 Configuration Options
 ---------------------
 
- * `api_key` - getexceptional.com your api key.
- * `ssl` - if your plan supports ssl, set `true`
+**Required**
+
+  * `api_key` - your getexceptional.com api key.
+
+**HTTP Proxy Options** *(optional)*
+
+  * `proxy_host` - proxy server ip / hostname.
+  * `proxy_port` - proxy server port.
+  * `proxy_user` - proxy server username.
+  * `proxy_pass` - proxy server password.
+
+**HTTP Client Options** *(optional)*
+
+  * `use_ssl` - set `true` if your plan supports ssl. (default: `false`)
+  * `http_open_timeout` - timeout in seconds to establish the connection. (default: `2`)
+  * `http_read_timeout` - timeout in seconds to wait for a reply. (default: `5`)
 
 Note on Patches/Pull Requests
 -----------------------------
