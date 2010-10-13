@@ -1,8 +1,6 @@
-require 'lib/resque-exceptional'
-
 spec = Gem::Specification.new do |s|
   s.name              = 'resque-exceptional'
-  s.version           = Resque::Failure::Exceptional::Version
+  s.version           = '0.0.1'
   s.date              = Time.now.strftime('%Y-%m-%d')
   s.summary           = 'A Resque failure backend for getexceptional.com'
   s.homepage          = 'http://github.com/lantins/resque-exceptional'
