@@ -1,22 +1,32 @@
+require 'simplecov'
+SimpleCov.start do
+  add_filter '/test/'
+end
+
 dir = File.dirname(File.expand_path(__FILE__))
 $LOAD_PATH.unshift dir + '/../lib'
 $TESTING = true
 
 require 'test/unit'
 require 'rubygems'
-require 'simplecov'
 require 'rr'
-
-SimpleCov.start do
-  add_filter "/test/"
-end
-
-class Test::Unit::TestCase
-  include RR::Adapters::TestUnit
-end
+require 'webmock'
+require 'webmock/test_unit'
 
 # require our failure backend to test.
 require 'resque-exceptional'
+
+class Test::Unit::TestCase
+  include RR::Adapters::TestUnit
+  include WebMock::API
+
+  # periodicly set the api key.
+  def with_api_key(key, &block)
+    Resque::Failure::Exceptional.api_key = key
+    yield
+    Resque::Failure::Exceptional.api_key = nil
+  end
+end
 
 # fake worker.
 class FakeWorker
@@ -28,7 +38,7 @@ class FakeWorker
 
   def log(msg)
     @log_history << msg
-    p msg
+    p msg if ENV['VERBOSE']
   end
 
   def to_s

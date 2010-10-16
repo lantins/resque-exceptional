@@ -1,26 +1,30 @@
 module Resque
   module Failure
-
-    # A resque failure backend that sends exception data to getexceptional.com
+    # A Resque failure backend that sends exception data to getexceptional.com
     class Exceptional < Base
+      Version = '0.0.1' # Failure backend version number.
+
       # Raised if the api_key is not set.
       class APIKeyError < StandardError
       end
 
-      # Our version number =)
-      Version = '0.0.1'
-
       class << self
-        # API Settings.
-        attr_accessor :api_key
-        # HTTP Proxy Options.
+        attr_accessor :api_key # your getexceptional api key.
+        attr_accessor :use_ssl # enable/disable SSL.
+        # HTTP proxy option
         attr_accessor :proxy_host, :proxy_port, :proxy_user, :proxy_pass
-        # HTTP Client Options.
-        attr_accessor :use_ssl, :http_open_timeout, :http_read_timeout
+        # HTTP client option
+        attr_accessor :http_open_timeout, :http_read_timeout
       end
 
       # Configures the failure backend. At a minimum you will need to set
       # an api_key.
+      #
+      # @example Setting your API Key and enabling SSL:
+      #   Resque::Failure::Exceptional.configure do |config|
+      #     config.api_key = '505f2518c41866bb0be7ba434bb2b079'
+      #     config.use_ssl = true
+      #   end
       def self.configure
         yield self
       end
@@ -60,7 +64,11 @@ module Resque
       #
       # @return [Hash] http headers.
       def http_headers
-        { 'Content-Type' => 'application/json', 'Accept' => 'application/json' }
+        { 
+          'Content-Type' => 'application/json',
+          'Accept'       => 'application/json',
+          'User-Agent'   => "resque-exceptional/#{Version}"
+        }
       end
 
       # Returns the compressed request data.
@@ -82,6 +90,9 @@ module Resque
       #
       # nb. this isn't documented in the public api... not sure if we should
       # use it or not...
+      #
+      # @return [String] md5sum of the backtrace.
+      # @return [nil] if we don't have a backtrace available.
       def uniqueness_hash
         return nil if (exception.backtrace.nil? || exception.backtrace.empty?)
         Digest::MD5.hexdigest(exception.backtrace.join)
@@ -104,17 +115,24 @@ module Resque
         http
       end
 
-      # Helper method to return the correct HTTP port number.
+      # Helper method to return the correct HTTP port number, depending on
+      # if were using SSL or not.
+      #
+      # @return [Fixnum] HTTP port number.
       def http_port
         use_ssl? ? 443 : 80
       end
 
       # Helper method to check if were using SSL or not.
+      #
+      # @return [Boolean] true if ssl is enabled.
       def use_ssl?
         self.class.use_ssl || false
       end
 
       # Adds a prefix to log messages.
+      #
+      # @param [String] msg your log message.
       def log(msg)
         super("resque-exception - #{msg}")
       end
@@ -154,6 +172,5 @@ module Resque
       end
 
     end
-
   end
 end
