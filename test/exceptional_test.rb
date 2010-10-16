@@ -92,6 +92,26 @@ class ExceptionalTest < Test::Unit::TestCase
     assert_equal true, @failure.respond_to?(:save)
   end
 
+  # test save success.
+  def test_save_success
+    with_api_key '27810b263f0e11eef2f1d29be75d2f39' do
+      stub_request(:post, /.*api.getexceptional.com.*/)
+      @failure.save
+      assert_requested(:post, /.*api.getexceptional.com.*/)
+      assert_match /^(resque-exception).*(success).*$/, @worker.log_history.first
+    end
+  end
+
+  # test save fail.
+  def test_save_fail
+    with_api_key '27810b263f0e11eef2f1d29be75d2f39' do
+      stub_request(:post, /.*api.getexceptional.com.*/).to_return(:status => [500, 'Internal Server Error'])
+      @failure.save
+      assert_requested(:post, /.*api.getexceptional.com.*/)
+      assert_match /^(resque-exception).*(fail).*(500).*$/, @worker.log_history.first
+    end
+  end
+
   # we need a Net::HTTP client setup to send the data.
   def test_http_client
     assert_kind_of Net::HTTP, @failure.http_client
