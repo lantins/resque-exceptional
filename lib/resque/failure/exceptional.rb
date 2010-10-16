@@ -2,7 +2,7 @@ module Resque
   module Failure
     # A Resque failure backend that sends exception data to getexceptional.com
     class Exceptional < Base
-      Version = '0.0.1' # Failure backend version number.
+      Version = '0.1.0' # Failure backend version number.
 
       # Raised if the api_key is not set.
       class APIKeyError < StandardError
