@@ -7,6 +7,7 @@ dir = File.dirname(File.expand_path(__FILE__))
 $LOAD_PATH.unshift dir + '/../lib'
 $TESTING = true
 
+gem 'test-unit'
 require 'test/unit'
 require 'rubygems'
 require 'rr'
