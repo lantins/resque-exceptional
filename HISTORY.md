@@ -1,4 +1,4 @@
-## 0.1.1 (2012-09-07)
+## 0.2.0 (2012-09-07)
 
 * Changed API URL to: api.exceptional.io
 * Changed test framework to MiniTest.
