@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/test_helper'
+require_relative 'test_helper'
 
 # Tests the failure backend works with resque, does not contact the api.
 class ExceptionalTest < Test::Unit::TestCase

@@ -1,4 +1,4 @@
-require File.dirname(__FILE__) + '/test_helper'
+require_relative 'test_helper'
 
 # make sure the worlds not fallen from beneith us.
 class ResqueTest < Test::Unit::TestCase
