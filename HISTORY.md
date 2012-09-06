@@ -1,5 +1,6 @@
 ## 0.1.1 (2012-09-07)
 
+* Changed API URL to: api.exceptional.io
 * Changed test framework to MiniTest.
 * Added Gemfile.
 * Replaced usage of `#to_json` with `MultiJson.dump()`

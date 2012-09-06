@@ -95,9 +95,9 @@ class ExceptionalTest < MiniTest::Unit::TestCase
   # test save success.
   def test_save_success
     with_api_key '27810b263f0e11eef2f1d29be75d2f39' do
-      stub_request(:post, /.*api.getexceptional.com.*/)
+      stub_request(:post, /.*api.exceptional.io.*/)
       @failure.save
-      assert_requested(:post, /.*api.getexceptional.com.*/)
+      assert_requested(:post, /.*api.exceptional.io.*/)
       assert_match /^(resque-exception).*(success).*$/, @worker.log_history.first
     end
   end
@@ -105,9 +105,9 @@ class ExceptionalTest < MiniTest::Unit::TestCase
   # test save fail.
   def test_save_fail
     with_api_key '27810b263f0e11eef2f1d29be75d2f39' do
-      stub_request(:post, /.*api.getexceptional.com.*/).to_return(:status => [500, 'Internal Server Error'])
+      stub_request(:post, /.*api.exceptional.io.*/).to_return(:status => [500, 'Internal Server Error'])
       @failure.save
-      assert_requested(:post, /.*api.getexceptional.com.*/)
+      assert_requested(:post, /.*api.exceptional.io.*/)
       assert_match /^(resque-exception).*(fail).*(500).*$/, @worker.log_history.first
     end
   end
@@ -206,10 +206,10 @@ class ExceptionalTest < MiniTest::Unit::TestCase
   # should return http response if successful.
   def test_http_post_request
     with_api_key '27810b263f0e11eef2f1d29be75d2f39' do
-      stub_request(:post, /.*api.getexceptional.com.*/)
+      stub_request(:post, /.*api.exceptional.io.*/)
 
       response = @failure.http_post_request
-      assert_requested(:post, /.*api.getexceptional.com.*/)
+      assert_requested(:post, /.*api.exceptional.io.*/)
       assert_equal '200', response.code, 'should be a successful http request'
     end
   end
@@ -221,18 +221,18 @@ class ExceptionalTest < MiniTest::Unit::TestCase
 
     with_api_key '27810b263f0e11eef2f1d29be75d2f39' do
       WebMock.reset!
-      stub_request(:post, /.*api.getexceptional.com.*/).to_raise(StandardError)
+      stub_request(:post, /.*api.exceptional.io.*/).to_raise(StandardError)
       assert_equal nil, @failure.http_post_request, 'should be nil, StandardError should have been caught.'
-      assert_requested(:post, /.*api.getexceptional.com.*/)
+      assert_requested(:post, /.*api.exceptional.io.*/)
     end
   end
 
   # make sure we catch timeout errors.
   def test_http_post_request_timeout
     with_api_key '27810b263f0e11eef2f1d29be75d2f39' do
-      stub_request(:post, /.*api.getexceptional.com.*/).to_timeout
+      stub_request(:post, /.*api.exceptional.io.*/).to_timeout
       assert_equal nil, @failure.http_post_request, 'should be nil, TimeoutError should have been caught.'
-      assert_requested(:post, /.*api.getexceptional.com.*/)
+      assert_requested(:post, /.*api.exceptional.io.*/)
     end
   end
 
