@@ -13,11 +13,15 @@ spec = Gem::Specification.new do |s|
   s.require_paths     = ['lib']
 
   s.add_dependency('resque', '>= 1.8.0')
-  s.add_development_dependency('test-unit')
-  s.add_development_dependency('rr', '>= 1.0.0')
+  s.add_dependency('multi_json')
+  s.add_development_dependency('rake')
+  s.add_development_dependency('minitest')
+  s.add_development_dependency('rr')
   s.add_development_dependency('webmock')
   s.add_development_dependency('yard')
-  s.add_development_dependency('simplecov', '>= 0.3.0')
+  s.add_development_dependency('simplecov')
+  # for 1.8 use a better timer please.
+  s.add_development_dependency('SystemTimer') if Gem.ruby_version < Gem::Version.new('1.9')
 
   s.description       = <<-EOL
   resque-exceptional provides a Resque failure backend that sends exceptions

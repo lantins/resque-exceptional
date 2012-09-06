@@ -10,6 +10,7 @@ task :default => :test
 ##
 # Test task.
 Rake::TestTask.new(:test) do |task|
+  task.libs << 'test'
   task.test_files = FileList['test/*_test.rb']
   task.verbose = true
 end
@@ -19,7 +20,7 @@ end
 YARD::Rake::YardocTask.new :yardoc do |t|
     t.files   = ['lib/**/*.rb']
     t.options = ['--output-dir', 'doc/',
-                 '--files', 'LICENSE,HISTORY.md',
+                 '--files', 'LICENSE HISTORY.md',
                  '--readme', 'README.md',
                  '--title', 'resque-exceptional documentation']
 end

@@ -1,3 +1,9 @@
+## 0.1.1 (2012-09-07)
+
+* Changed test framework to MiniTest.
+* Added Gemfile.
+* Replaced usage of `#to_json` with `MultiJson.dump()`
+
 ## 0.1.0 (2010-10-16)
 
 * Added more unit tests.

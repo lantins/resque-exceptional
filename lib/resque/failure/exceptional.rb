@@ -73,7 +73,7 @@ module Resque
 
       # Returns the compressed request data.
       def compressed_request
-        Zlib::Deflate.deflate(api_request.to_json, Zlib::BEST_SPEED)
+        Zlib::Deflate.deflate(MultiJson.dump(api_request), Zlib::BEST_SPEED)
       end
 
       # Path & query options used by the HTTP Post.

@@ -1,7 +1,7 @@
-require File.dirname(__FILE__) + '/test_helper'
+require 'test_helper'
 
 # Tests the failure backend works with resque, does not contact the api.
-class ExceptionalTest < Test::Unit::TestCase
+class ExceptionalTest < MiniTest::Unit::TestCase
   def setup
     @exception = TestApp.grab_exception
     @worker = FakeWorker.new
@@ -9,7 +9,7 @@ class ExceptionalTest < Test::Unit::TestCase
     @payload = { 'class' => 'TestJob', 'args' => ['foo', 'bar'] }
     @failure = Resque::Failure::Exceptional.new(@exception, @worker, @queue, @payload)
     WebMock.disable_net_connect!
-    WebMock.reset_webmock
+    WebMock.reset!
   end
 
   # test we can build a hash to send to the api.
@@ -198,7 +198,7 @@ class ExceptionalTest < Test::Unit::TestCase
 
   # raise exception if api key is not set.
   def test_http_path_query_without_api_key_raises_exception
-    assert_raise Resque::Failure::Exceptional::APIKeyError, 'should raise APIKeyError if api key is not set' do
+    assert_raises Resque::Failure::Exceptional::APIKeyError, 'should raise APIKeyError if api key is not set' do
       @failure.http_path_query
     end
   end
@@ -220,7 +220,7 @@ class ExceptionalTest < Test::Unit::TestCase
     assert_equal nil, @failure.http_post_request, 'should be nil, APIKeyError should have been caught.'
 
     with_api_key '27810b263f0e11eef2f1d29be75d2f39' do
-      WebMock.reset_webmock
+      WebMock.reset!
       stub_request(:post, /.*api.getexceptional.com.*/).to_raise(StandardError)
       assert_equal nil, @failure.http_post_request, 'should be nil, StandardError should have been caught.'
       assert_requested(:post, /.*api.getexceptional.com.*/)
@@ -239,7 +239,7 @@ class ExceptionalTest < Test::Unit::TestCase
   # perform a test with the real api.
   def test_live_fire_with_real_api!
     unless ENV['EXCEPTIONAL_API_KEY']
-      omit 'Test with the REAL API. Example: `EXCEPTIONAL_API_KEY=27810b263f0e11eef2f1d29be75d2f39 rake test`'
+      skip 'Test with the REAL API. Example: `EXCEPTIONAL_API_KEY=27810b263f0e11eef2f1d29be75d2f39 bundle exec rake test`'
     end
 
     with_api_key ENV['EXCEPTIONAL_API_KEY'] do

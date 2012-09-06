@@ -1,24 +1,30 @@
-require 'simplecov'
-SimpleCov.start do
-  add_filter '/test/'
-end
-
+# fix load path.
 dir = File.dirname(File.expand_path(__FILE__))
 $LOAD_PATH.unshift dir + '/../lib'
 $TESTING = true
 
-require 'test/unit'
+# require gems for testing.
 require 'rubygems'
+require 'minitest/unit'
+require 'minitest/pride'
+require 'minitest/autorun'
 require 'rr'
 require 'webmock'
-require 'webmock/test_unit'
+require 'webmock/minitest'
+
+# Run code coverage in MRI 1.9 only.
+if RUBY_VERSION >= '1.9' && RUBY_ENGINE == 'ruby'
+  require 'simplecov'
+  SimpleCov.start do
+    add_filter '/test/'
+  end
+end
 
 # require our failure backend to test.
 require 'resque-exceptional'
 
-class Test::Unit::TestCase
+class MiniTest::Unit::TestCase
   include RR::Adapters::TestUnit
-  include WebMock::API
 
   # periodicly set the api key.
   def with_api_key(key, &block)
