@@ -5,8 +5,8 @@ $TESTING = true
 
 # require gems for testing.
 require 'rubygems'
-require 'minitest/unit'
-require 'minitest/pride'
+#require 'minitest/unit'
+#require 'minitest/pride'
 require 'minitest/autorun'
 require 'rr'
 require 'webmock'
@@ -23,9 +23,7 @@ end
 # require our failure backend to test.
 require 'resque-exceptional'
 
-class MiniTest::Unit::TestCase
-  include RR::Adapters::TestUnit
-
+class Minitest::Test
   # periodicly set the api key.
   def with_api_key(key, &block)
     Resque::Failure::Exceptional.api_key = key
