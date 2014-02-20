@@ -11,6 +11,7 @@ module Resque
       class << self
         attr_accessor :api_key # your getexceptional api key.
         attr_accessor :use_ssl # enable/disable SSL.
+        attr_accessor :deliver # Whether or not to submit exceptions to Exceptional
         # HTTP proxy option
         attr_accessor :proxy_host, :proxy_port, :proxy_user, :proxy_pass
         # HTTP client option
@@ -33,6 +34,7 @@ module Resque
       #
       # When a job fails, a new instance is created and #save is called.
       def save
+        return nil if self.class.deliver === false
         return unless response = http_post_request
 
         if response.code == '200'
@@ -64,7 +66,7 @@ module Resque
       #
       # @return [Hash] http headers.
       def http_headers
-        { 
+        {
           'Content-Type' => 'application/json',
           'Accept'       => 'application/json',
           'User-Agent'   => "resque-exceptional/#{Version}"
