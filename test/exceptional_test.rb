@@ -115,15 +115,14 @@ class ExceptionalTest < Minitest::Test
   # test save does not submit to Exceptional if deliveries are disabled
   def test_do_not_submit_if_deliveries_are_disabled
     with_api_key '27810b263f0e11eef2f1d29be75d2f39' do
-      Resque::Failure::Exceptional.configure do |config|
-        config.deliver = false
-      end
+      # turn off delivery.
+      Resque::Failure::Exceptional.configure { |c| c.deliver = false }
       stub_request(:post, /.*api.exceptional.io.*/)
       @failure.save
       assert_equal(0, @worker.log_history.length)
-      Resque::Failure::Exceptional.configure do |config|
-        config.deliver = nil
-      end
+
+      # Put default setting back in place.
+      Resque::Failure::Exceptional.configure { |c| c.deliver = nil }
     end
   end
 

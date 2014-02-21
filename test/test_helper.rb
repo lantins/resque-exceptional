@@ -4,9 +4,9 @@ $LOAD_PATH.unshift dir + '/../lib'
 $TESTING = true
 
 # require gems for testing.
-require 'rubygems'
-#require 'minitest/unit'
-#require 'minitest/pride'
+require 'minitest'
+require 'minitest/unit'
+require 'minitest/pride'
 require 'minitest/autorun'
 require 'rr'
 require 'webmock'
@@ -24,6 +24,8 @@ end
 require 'resque-exceptional'
 
 class Minitest::Test
+  include WebMock::API
+
   # periodicly set the api key.
   def with_api_key(key, &block)
     Resque::Failure::Exceptional.api_key = key
