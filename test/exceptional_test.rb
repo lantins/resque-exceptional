@@ -69,6 +69,7 @@ class ExceptionalTest < Minitest::Test
   def test_configure
     Resque::Failure::Exceptional.configure do |config|
       config.api_key = 'my api key.'
+      config.deliver = false
       # everything below are http client options.
       config.proxy_host = 'host.name.com'
       config.proxy_port = 8080
@@ -81,8 +82,8 @@ class ExceptionalTest < Minitest::Test
 
     # reset everything to nil...
     Resque::Failure::Exceptional.configure do |config|
-      options = %w{api_key proxy_host proxy_port proxy_user proxy_pass use_ssl
-                   http_open_timeout http_read_timeout}
+      options = %w{api_key deliver proxy_host proxy_port proxy_user proxy_pass
+                   use_ssl http_open_timeout http_read_timeout}
       options.each { |opt| config.send("#{opt}=", nil) }
     end
   end
@@ -117,9 +118,8 @@ class ExceptionalTest < Minitest::Test
     with_api_key '27810b263f0e11eef2f1d29be75d2f39' do
       # turn off delivery.
       Resque::Failure::Exceptional.configure { |c| c.deliver = false }
-      stub_request(:post, /.*api.exceptional.io.*/)
       @failure.save
-      assert_equal(0, @worker.log_history.length)
+      assert_equal 0, @worker.log_history.length, 'should not send any requests'
 
       # Put default setting back in place.
       Resque::Failure::Exceptional.configure { |c| c.deliver = nil }
@@ -148,19 +148,25 @@ class ExceptionalTest < Minitest::Test
     assert_match /^resque-exception - .*/, @worker.log_history.last
   end
 
-  # test our `#use_ssl?` and `#http_port` helper methods.
+  # test our `#use_ssl?`, `deliver?` and `#http_port` helper methods.
   def test_helper_methods
-    # check defaults
-    assert_equal false, @failure.use_ssl?, 'use_ssl? should default to false.'
-    assert_equal 80, @failure.http_port, 'http_port should default to 80.'
-
     # enable ssl.
     Resque::Failure::Exceptional.configure { |c| c.use_ssl = true }
     assert_equal true, @failure.use_ssl?, 'use_ssl? should now be true'
     assert_equal 443, @failure.http_port, 'http_port should now be 443.'
 
-    # put the config back.
-    Resque::Failure::Exceptional.configure { |c| c.use_ssl = false }
+    # disable ssl.
+    Resque::Failure::Exceptional.configure { |c| c.use_ssl = nil }
+    assert_equal false, @failure.use_ssl?, 'use_ssl? should default to false.'
+    assert_equal 80, @failure.http_port, 'http_port should default to 80.'
+
+    # disable delivery.
+    Resque::Failure::Exceptional.configure { |c| c.deliver = false }
+    assert_equal false, @failure.deliver?, 'deliver should now be false'
+
+    # enable delivery.
+    Resque::Failure::Exceptional.configure { |c| c.deliver = nil }
+    assert_equal true, @failure.deliver?, 'deliver should now be true'
   end
 
   # returns nil if the backtrace is empty.
@@ -212,8 +218,10 @@ class ExceptionalTest < Minitest::Test
 
   # raise exception if api key is not set.
   def test_http_path_query_without_api_key_raises_exception
-    assert_raises Resque::Failure::Exceptional::APIKeyError, 'should raise APIKeyError if api key is not set' do
-      @failure.http_path_query
+    with_api_key nil do
+      assert_raises Resque::Failure::Exceptional::APIKeyError, 'should raise APIKeyError if api key is not set' do
+        @failure.http_path_query
+      end
     end
   end
 

@@ -53,6 +53,10 @@ Configuration Options
 
   * `api_key` - your getexceptional.com api key.
 
+**General Options** *(optional)*
+
+  * `deliver` - set `false` to disable delivery of errors to exceptional API, handy for testing (default: `true`)
+
 **HTTP Proxy Options** *(optional)*
 
   * `proxy_host` - proxy server ip / hostname.

@@ -34,7 +34,7 @@ module Resque
       #
       # When a job fails, a new instance is created and #save is called.
       def save
-        return nil if self.class.deliver === false
+        return unless deliver?
         return unless response = http_post_request
 
         if response.code == '200'
@@ -130,6 +130,13 @@ module Resque
       # @return [Boolean] true if ssl is enabled.
       def use_ssl?
         self.class.use_ssl || false
+      end
+
+      # Helper method to check if errors should be submitted to exceptional API.
+      #
+      # @return [Boolean] true if deliver is enabled.
+      def deliver?
+        self.class.deliver.nil? || self.class.deliver
       end
 
       # Adds a prefix to log messages.
