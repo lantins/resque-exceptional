@@ -3,15 +3,6 @@ dir = File.dirname(File.expand_path(__FILE__))
 $LOAD_PATH.unshift dir + '/../lib'
 $TESTING = true
 
-# require gems for testing.
-require 'minitest'
-require 'minitest/unit'
-require 'minitest/pride'
-require 'minitest/autorun'
-require 'rr'
-require 'webmock'
-require 'webmock/minitest'
-
 # Run code coverage in MRI 1.9 only.
 if RUBY_VERSION >= '1.9' && RUBY_ENGINE == 'ruby'
   require 'simplecov'
@@ -19,6 +10,13 @@ if RUBY_VERSION >= '1.9' && RUBY_ENGINE == 'ruby'
     add_filter '/test/'
   end
 end
+
+# require gems for testing.
+require 'minitest/autorun'
+require 'minitest/pride'
+require 'rr'
+require 'webmock'
+require 'webmock/minitest'
 
 # require our failure backend to test.
 require 'resque-exceptional'

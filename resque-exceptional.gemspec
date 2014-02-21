@@ -20,7 +20,7 @@ spec = Gem::Specification.new do |s|
   s.add_development_dependency('rr', '~> 1.1')
   s.add_development_dependency('webmock', '~> 1.8')
   s.add_development_dependency('yard', '~> 0.8')
-  s.add_development_dependency('simplecov', '~> 0.8')
+  s.add_development_dependency('simplecov', '~> 0.7.1')
 
   s.description       = <<-EOL
   resque-exceptional provides a Resque failure backend that sends exceptions
