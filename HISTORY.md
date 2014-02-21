@@ -1,3 +1,8 @@
+## 0.2.2 (2014-02-21)
+
+* Add `deliver?` helper method.
+* Improve tests and ensure they are not order order.
+
 ## 0.2.1 (2014-02-21)
 
 * Add `deliver` config option; `false` will disable delivery, good for tests.
