@@ -4,6 +4,8 @@ resque-exceptional
 resque-exceptional provides a [Resque][re] failure backend that sends exceptions
 raised by jobs to [getexceptional.com][ge]
 
+[![Build Status](https://secure.travis-ci.org/lantins/resque-exceptional.png?branch=master)](http://travis-ci.org/lantins/resque-exceptional)
+
 Install & Quick Start
 ---------------------
 

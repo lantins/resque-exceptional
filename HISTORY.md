@@ -1,3 +1,7 @@
+## 0.2.1 (2014-02-21)
+
+* Add `deliver` config option; `false` will disable delivery, good for tests.
+
 ## 0.2.0 (2012-09-07)
 
 * Changed API URL to: api.exceptional.io

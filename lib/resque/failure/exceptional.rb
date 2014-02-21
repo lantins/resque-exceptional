@@ -2,7 +2,7 @@ module Resque
   module Failure
     # A Resque failure backend that sends exception data to getexceptional.com
     class Exceptional < Base
-      Version = '0.1.0' # Failure backend version number.
+      Version = '0.2.1' # Failure backend version number.
 
       # Raised if the api_key is not set.
       class APIKeyError < StandardError
@@ -11,7 +11,7 @@ module Resque
       class << self
         attr_accessor :api_key # your getexceptional api key.
         attr_accessor :use_ssl # enable/disable SSL.
-        attr_accessor :deliver # Whether or not to submit exceptions to Exceptional
+        attr_accessor :deliver # whether or not to submit exceptions to Exceptional
         # HTTP proxy option
         attr_accessor :proxy_host, :proxy_port, :proxy_user, :proxy_pass
         # HTTP client option
